@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280">
-    <Grid>
-
-    </Grid>
+        Title="PainWindow" Height="720" Width="1280" LostFocus="Window_Pause" LostKeyboardFocus="Window_Pause" GotFocus="Window_Resume" KeyDown="Window_KeyDown" MouseDown="Window_Pause">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0*"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Label x:Name="LB_Test" Content="Label" HorizontalAlignment="Left" Margin="78,129,0,0" VerticalAlignment="Top" Grid.Column="1" Height="107" Width="276"/>
+		<Label x:Name="LB_KB" Content="" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="935,630,0,10">
+		</Label>
+		<Label x:Name="LB_Player" Content="A" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="306,0,0,0" VerticalAlignment="Center"/>
+	</Grid>
 </Window>
