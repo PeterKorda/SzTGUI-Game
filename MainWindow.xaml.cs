@@ -19,6 +19,9 @@ namespace Game
     public partial class MainWindow : Window
     {
         private bool paused = false;
+        public int playerSpeed = 5;
+        long tick = 0;
+        long oldTick = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -30,6 +33,7 @@ namespace Game
                     {
                         if (!paused)
                         {
+                            // Mouse Position + Player Rotation
                             Mouse.Capture(this);
                             Point pointToWindow = Mouse.GetPosition(this);
                             Point pointToScreen = PointToScreen(pointToWindow);
@@ -44,13 +48,50 @@ namespace Game
                             LB_Test.Content += " Heading:" + heading.ToString();
                             RotateTransform rt = new RotateTransform(heading);
                             LB_Player.LayoutTransform = rt;
+
+                            //Input
+                            if ((Keyboard.GetKeyStates(Key.A) & KeyStates.Down) > 0)
+                            {
+                                Canvas.SetLeft(LB_Player, Math.Max(((int)Canvas.GetLeft(LB_Player))-playerSpeed,10));
+                            }
+                            if ((Keyboard.GetKeyStates(Key.W) & KeyStates.Down) > 0)
+                            {
+                                Canvas.SetTop(LB_Player, Math.Max(((int)Canvas.GetTop(LB_Player)) - playerSpeed, 10));
+                            }
+                            if ((Keyboard.GetKeyStates(Key.S) & KeyStates.Down) > 0)
+                            {
+                                Canvas.SetTop(LB_Player, Math.Min(((int)Canvas.GetTop(LB_Player)) + playerSpeed, Main_Canvas.ActualHeight-30-playerSpeed));
+                            }
+                            if ((Keyboard.GetKeyStates(Key.D) & KeyStates.Down) > 0)
+                            {
+                                Canvas.SetLeft(LB_Player, Math.Min(((int)Canvas.GetLeft(LB_Player)) + playerSpeed, Main_Canvas.ActualWidth-30-playerSpeed));
+                            }
+
+                            //FPS Counter
+                            if (tick < long.MaxValue)
+                            {
+                                tick++;
+                            }
+                            else 
+                            { 
+                                tick = 0; 
+                                oldTick = 0;
+                            }
+                            LB_KB.Content = "\nTick: " + tick.ToString();
+                            long tickDelta = tick - oldTick;
+                            if (tickDelta >= 500/main_timer.Interval)
+                            {
+                                oldTick = tick;
+                                LB_FPS.Content = "FPS: " + tickDelta * 2;
+                            }
                         }
                         else { LB_Test.Content = "Paused"; }
 
                     }));
                 }
             };
-            main_timer.Interval = 42;
+            // Tick Speed
+            main_timer.Interval = 1000/120;
             main_timer.Start();
 
             //MainLoop();
@@ -92,6 +133,11 @@ namespace Game
         {
             paused = false;
             LB_KB.Content = e.Key.ToString();
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+
         }
     }
 }
