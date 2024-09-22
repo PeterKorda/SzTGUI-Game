@@ -10,6 +10,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Reflection.Emit;
+using System.Numerics;
 
 namespace Game
 {
@@ -26,6 +27,7 @@ namespace Game
         {
             InitializeComponent();
 
+            Player temp_player = new Player(new Point(200, 200), .2f, 4f);
             System.Timers.Timer main_timer = new System.Timers.Timer();
             main_timer.Elapsed += delegate {
                 {
@@ -40,50 +42,51 @@ namespace Game
                             LB_Test.Content = pointToScreen.ToString();
                             Mouse.Capture(null);
                             object A = LB_Player;
-                            Point player = LB_Player.PointToScreen(new Point(0,0));
+                            Point player = LB_Player.PointToScreen(new Point(0, 0));
                             LB_Test.Content += "\nP: " + player.ToString();
 
-                            double heading = Math.Atan2((player.Y-pointToScreen.Y),(player.X - pointToScreen.X));
-                            heading = heading * 180 / Math.PI-90;
+                            double heading = Math.Atan2((player.Y - pointToScreen.Y), (player.X - pointToScreen.X));
+                            heading = heading * 180 / Math.PI - 90;
                             LB_Test.Content += " Heading:" + heading.ToString();
                             RotateTransform rt = new RotateTransform(heading);
                             LB_Player.LayoutTransform = rt;
 
                             //Input
+                            Vector2 move = new Vector2(0,0);
                             if ((Keyboard.GetKeyStates(Key.A) & KeyStates.Down) > 0)
                             {
-                                Canvas.SetLeft(LB_Player, Math.Max(((int)Canvas.GetLeft(LB_Player))-playerSpeed,10));
+                                Canvas.SetLeft(LB_Player, Math.Max(((int)Canvas.GetLeft(LB_Player)) - playerSpeed, 10));
+                                move.X -= 1;
                             }
                             if ((Keyboard.GetKeyStates(Key.W) & KeyStates.Down) > 0)
                             {
                                 Canvas.SetTop(LB_Player, Math.Max(((int)Canvas.GetTop(LB_Player)) - playerSpeed, 10));
+                                move.Y -= 1;
                             }
                             if ((Keyboard.GetKeyStates(Key.S) & KeyStates.Down) > 0)
                             {
-                                Canvas.SetTop(LB_Player, Math.Min(((int)Canvas.GetTop(LB_Player)) + playerSpeed, Main_Canvas.ActualHeight-30-playerSpeed));
+                                Canvas.SetTop(LB_Player, Math.Min(((int)Canvas.GetTop(LB_Player)) + playerSpeed, Main_Canvas.ActualHeight - 30 - playerSpeed));
+                                move.Y += 1;
                             }
                             if ((Keyboard.GetKeyStates(Key.D) & KeyStates.Down) > 0)
                             {
-                                Canvas.SetLeft(LB_Player, Math.Min(((int)Canvas.GetLeft(LB_Player)) + playerSpeed, Main_Canvas.ActualWidth-30-playerSpeed));
+                                Canvas.SetLeft(LB_Player, Math.Min(((int)Canvas.GetLeft(LB_Player)) + playerSpeed, Main_Canvas.ActualWidth - 30 - playerSpeed));
+                                move.X += 1;
                             }
+                            temp_player.MoveDirection = move;
+                            temp_player.SimulateTick();
 
-                            //FPS Counter
+                            // Tick
                             if (tick < long.MaxValue)
                             {
                                 tick++;
                             }
-                            else 
-                            { 
-                                tick = 0; 
+                            else
+                            {
+                                tick = 0;
                                 oldTick = 0;
                             }
-                            LB_KB.Content = "\nTick: " + tick.ToString();
-                            long tickDelta = tick - oldTick;
-                            if (tickDelta >= 500/main_timer.Interval)
-                            {
-                                oldTick = tick;
-                                LB_FPS.Content = "FPS: " + tickDelta * 2;
-                            }
+
                         }
                         else { LB_Test.Content = "Paused"; }
 
@@ -91,10 +94,24 @@ namespace Game
                 }
             };
             // Tick Speed
-            main_timer.Interval = 1000/120;
+            main_timer.Interval = 1000 / 10;
             main_timer.Start();
 
-            //MainLoop();
+            main_timer.Elapsed += delegate {
+                {
+                    this.Dispatcher.Invoke(new Action(delegate
+                    {
+                            //FPS Counter
+                            LB_KB.Content = "\nTick: " + tick.ToString();
+                            long tickDelta = tick - oldTick;
+                            if (tickDelta >= 500 / main_timer.Interval)
+                            {
+                                oldTick = tick;
+                                LB_FPS.Content = "FPS: " + tickDelta * 2;
+                            }
+                    }));
+                }
+            };
         }
         public void MainLoop()
         {
