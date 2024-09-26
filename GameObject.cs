@@ -15,6 +15,7 @@ namespace Game
         protected Vector2 velocity;
         protected float acceleration;
         protected float maxVelocity;
+        protected float dragForce = 5f;
 
 
         public Point Position { get { return position; } }
@@ -38,6 +39,23 @@ namespace Game
             position = new Point(0,0);
             acceleration = 0;
             maxVelocity = 0;
+        }
+
+        public static Vector2 Normalize(Vector2 v)
+        {
+            Vector2 vOut = Vector2.Normalize(v);
+            if (v.X == 0) { vOut.X = 0; }
+            if (v.Y == 0) { vOut.Y = 0; }
+            return vOut;
+        }
+
+        public static Vector2 ClampVelocity(Vector2 v, float limit)
+        {
+            if (v.Length() > limit)
+            {
+                v = Normalize(v)*limit;
+            }
+            return v;
         }
     }
 }

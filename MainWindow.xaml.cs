@@ -27,7 +27,7 @@ namespace Game
         {
             InitializeComponent();
 
-            Player temp_player = new Player(new Point(200, 200), .2f, 4f);
+            Player temp_player = new Player(new Point(200, 200), 1f, 5f);
             System.Timers.Timer main_timer = new System.Timers.Timer();
             main_timer.Elapsed += delegate {
                 {
@@ -55,26 +55,30 @@ namespace Game
                             Vector2 move = new Vector2(0,0);
                             if ((Keyboard.GetKeyStates(Key.A) & KeyStates.Down) > 0)
                             {
-                                Canvas.SetLeft(LB_Player, Math.Max(((int)Canvas.GetLeft(LB_Player)) - playerSpeed, 10));
+                                //Canvas.SetLeft(LB_Player, Math.Max(((int)Canvas.GetLeft(LB_Player)) - playerSpeed, 10));
                                 move.X -= 1;
                             }
                             if ((Keyboard.GetKeyStates(Key.W) & KeyStates.Down) > 0)
                             {
-                                Canvas.SetTop(LB_Player, Math.Max(((int)Canvas.GetTop(LB_Player)) - playerSpeed, 10));
+                                //Canvas.SetTop(LB_Player, Math.Max(((int)Canvas.GetTop(LB_Player)) - playerSpeed, 10));
                                 move.Y -= 1;
                             }
                             if ((Keyboard.GetKeyStates(Key.S) & KeyStates.Down) > 0)
                             {
-                                Canvas.SetTop(LB_Player, Math.Min(((int)Canvas.GetTop(LB_Player)) + playerSpeed, Main_Canvas.ActualHeight - 30 - playerSpeed));
+                                //Canvas.SetTop(LB_Player, Math.Min(((int)Canvas.GetTop(LB_Player)) + playerSpeed, Main_Canvas.ActualHeight - 30 - playerSpeed));
                                 move.Y += 1;
                             }
                             if ((Keyboard.GetKeyStates(Key.D) & KeyStates.Down) > 0)
                             {
-                                Canvas.SetLeft(LB_Player, Math.Min(((int)Canvas.GetLeft(LB_Player)) + playerSpeed, Main_Canvas.ActualWidth - 30 - playerSpeed));
+                                //Canvas.SetLeft(LB_Player, Math.Min(((int)Canvas.GetLeft(LB_Player)) + playerSpeed, Main_Canvas.ActualWidth - 30 - playerSpeed));
                                 move.X += 1;
                             }
                             temp_player.MoveDirection = move;
                             temp_player.SimulateTick();
+                            LB_Debug.Content = "Move: " + temp_player.MoveDirection.ToString();
+                            LB_Debug.Content += "\nVelocity: " + temp_player.Velocity.X.ToString() + ", " + temp_player.Velocity.Y.ToString() + "\n|V|: " + temp_player.Velocity.Length();
+                            Canvas.SetTop(LB_Player, temp_player.Position.Y);
+                            Canvas.SetLeft(LB_Player, temp_player.Position.X);
 
                             // Tick
                             if (tick < long.MaxValue)
@@ -94,7 +98,7 @@ namespace Game
                 }
             };
             // Tick Speed
-            main_timer.Interval = 1000 / 10;
+            main_timer.Interval = 1000 / 40;
             main_timer.Start();
 
             main_timer.Elapsed += delegate {

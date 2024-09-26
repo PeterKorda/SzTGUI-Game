@@ -22,22 +22,22 @@ namespace Game
 
         public override void SimulateTick()
         {
-            velocity = velocity + MoveDirection*acceleration;
-            position = new Point(position.X + velocity.X, position.Y + velocity.Y);
+            dragForce = acceleration * .25f;
+            // Acceleration
+            Vector2 nextVelocity = velocity;
+            nextVelocity.X = velocity.X + (MoveDirection.X * acceleration);
+            nextVelocity.Y = velocity.Y + (MoveDirection.Y * acceleration);
+            velocity = ClampVelocity(nextVelocity,maxVelocity);
+            Debug.WriteLine(Vector2.Normalize(velocity));
             Debug.WriteLine("V: " + velocity);
-            Debug.WriteLine("V clamped: " + LimitVector(velocity, maxVelocity));
             Debug.WriteLine("Position: " + position);
-            velocity = velocity * .8f;
-            velocity.X = (velocity.X > .01f)?velocity.X:0;
-            velocity.Y = (velocity.Y > .01f)?velocity.Y:0;
+            if (MoveDirection.Length() == 0) // Min velocity to move without input
+            {
+                velocity = velocity - Normalize(velocity) * dragForce; // Drag
+                velocity.X = (Math.Abs(velocity.X) > .01f) ? velocity.X : 0;
+                velocity.Y = (Math.Abs(velocity.Y) > .01f) ? velocity.Y : 0;
+            }
+            position = new Point(position.X + velocity.X, position.Y + velocity.Y);
         }
-
-        static protected Vector2 LimitVector(Vector2 v, float maximum)
-        {
-            float magnitude = (float)Math.Sqrt(v.X * v.X + v.Y * v.Y);
-            return new Vector2((v.X/magnitude)*maximum, (v.Y/magnitude)*maximum);
-        }
-
-
     }
 }

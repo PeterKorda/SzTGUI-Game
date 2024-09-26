@@ -11,6 +11,8 @@
 		<Label x:Name="LB_KB" Content="" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Canvas.Left="935" Canvas.Top="630" Width="325" HorizontalAlignment="Left" VerticalAlignment="Center" Height="64"/>
 		<Label x:Name="LB_Player" Content="A" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="411" Canvas.Top="218"/>
 		<Label x:Name="LB_FPS" Content="FPS:" Canvas.Left="1182" Canvas.Top="86"/>
+		<Label x:Name="LB_Debug" Content="Label" Canvas.Left="541" Canvas.Top="111" Height="212" Width="422"/>
+
 
 	</Canvas>
 </Window>
