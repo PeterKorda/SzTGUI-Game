@@ -15,22 +15,24 @@ namespace Game
         protected Vector2 velocity;
         protected float acceleration;
         protected float maxVelocity;
-        protected float dragForce = 5f;
+        protected float dragForce;
 
 
         public Point Position { get { return position; } }
         public Vector2 Velocity { get { return velocity; } }
         public float Acceleration { get { return acceleration; } }
         public float MaxVelocity { get { return maxVelocity; } }
+        public float DragForce { get { return dragForce; } }
 
         public abstract void SimulateTick();
 
-        protected GameObject(Point position, float acceleration, float maxVelocity)
+        protected GameObject(Point position, float acceleration, float maxVelocity, float dragForce)
         {
             this.position = position;
             this.acceleration = acceleration;
             this.maxVelocity = maxVelocity;
             velocity = new Vector2(0, 0);
+            this.dragForce = dragForce;
         }
 
         protected GameObject()
@@ -39,6 +41,13 @@ namespace Game
             position = new Point(0,0);
             acceleration = 0;
             maxVelocity = 0;
+        }
+
+        protected GameObject(Point position, float acceleration, float maxVelocity)
+        {
+            this.position = position;
+            this.acceleration = acceleration;
+            this.maxVelocity = maxVelocity;
         }
 
         public static Vector2 Normalize(Vector2 v)

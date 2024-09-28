@@ -11,6 +11,7 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Reflection.Emit;
 using System.Numerics;
+using System.Diagnostics;
 
 namespace Game
 {
@@ -27,7 +28,13 @@ namespace Game
         {
             InitializeComponent();
 
-            Player temp_player = new Player(new Point(200, 200), 1f, 5f);
+            List<GameObject> GM = new List<GameObject>();
+
+            Player temp_player = new Player(new Point(200, 200), 1f, 5f,.25f);
+            bool canShoot = true;
+            System.Windows.Controls.Label LB_proj = new System.Windows.Controls.Label() { Content = "O" };
+            Main_Canvas.Children.Add(LB_proj);
+
             System.Timers.Timer main_timer = new System.Timers.Timer();
             main_timer.Elapsed += delegate {
                 {
@@ -35,22 +42,6 @@ namespace Game
                     {
                         if (!paused)
                         {
-                            // Mouse Position + Player Rotation
-                            Mouse.Capture(this);
-                            Point pointToWindow = Mouse.GetPosition(this);
-                            Point pointToScreen = PointToScreen(pointToWindow);
-                            LB_Test.Content = pointToScreen.ToString();
-                            Mouse.Capture(null);
-                            object A = LB_Player;
-                            Point player = LB_Player.PointToScreen(new Point(0, 0));
-                            LB_Test.Content += "\nP: " + player.ToString();
-
-                            double heading = Math.Atan2((player.Y - pointToScreen.Y), (player.X - pointToScreen.X));
-                            heading = heading * 180 / Math.PI - 90;
-                            LB_Test.Content += " Heading:" + heading.ToString();
-                            RotateTransform rt = new RotateTransform(heading);
-                            LB_Player.LayoutTransform = rt;
-
                             //Input
                             Vector2 move = new Vector2(0,0);
                             if ((Keyboard.GetKeyStates(Key.A) & KeyStates.Down) > 0)
@@ -73,12 +64,51 @@ namespace Game
                                 //Canvas.SetLeft(LB_Player, Math.Min(((int)Canvas.GetLeft(LB_Player)) + playerSpeed, Main_Canvas.ActualWidth - 30 - playerSpeed));
                                 move.X += 1;
                             }
+                            if ((Keyboard.GetKeyStates(Key.Space) & KeyStates.Down) > 0 & canShoot)
+                            {
+                                canShoot = false;
+                                temp_player.Shoot();
+                                Debug.WriteLine("Shoot------------");
+                            }
+                            if ((Keyboard.GetKeyStates(Key.Space) & KeyStates.Down) == 0)
+                            {
+                                canShoot = true;
+                            }
+
+                            // Mouse Position + Player Rotation
+                            Mouse.Capture(this);
+                            Point pointToWindow = Mouse.GetPosition(this);
+                            Point pointToScreen = PointToScreen(pointToWindow);
+                            LB_Test.Content = pointToScreen.ToString();
+                            Mouse.Capture(null);
+                            Point player = LB_Player.PointToScreen(new Point(0, 0));
+                            LB_Test.Content += "\nP: " + player.ToString();
+
+                            double heading = Math.Atan2((player.Y - pointToScreen.Y), (player.X - pointToScreen.X));
+                            LB_Test.Content += "\nRaw Heading:" + heading.ToString();
+                            //heading = heading * 180 / Math.PI - 90;
+                            LB_Test.Content += "\nHeading:" + heading.ToString();
+
+                            // Simulate
                             temp_player.MoveDirection = move;
+                            temp_player.SetAimDirection(heading);
                             temp_player.SimulateTick();
+
+
+                            RotateTransform rt = new RotateTransform(temp_player.AimDirection * 180 / Math.PI - 90);
+                            LB_Player.LayoutTransform = rt;
                             LB_Debug.Content = "Move: " + temp_player.MoveDirection.ToString();
                             LB_Debug.Content += "\nVelocity: " + temp_player.Velocity.X.ToString() + ", " + temp_player.Velocity.Y.ToString() + "\n|V|: " + temp_player.Velocity.Length();
+                            LB_Debug.Content += "\nLB pos: " + LB_Player.PointToScreen(new Point(0, 0)) + "\nPlayer pos: " + temp_player.Position;
                             Canvas.SetTop(LB_Player, temp_player.Position.Y);
                             Canvas.SetLeft(LB_Player, temp_player.Position.X);
+
+                            foreach (Projectile p in temp_player.projectiles)
+                            {
+                                p.SimulateTick();
+                                Canvas.SetTop(LB_proj, p.Position.Y);
+                                Canvas.SetLeft(LB_proj, p.Position.X);
+                            }
 
                             // Tick
                             if (tick < long.MaxValue)
