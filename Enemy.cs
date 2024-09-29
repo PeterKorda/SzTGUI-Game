@@ -11,6 +11,8 @@ namespace Game
         public override void SimulateTick()
         {
             throw new NotImplementedException();
+
+            base.SimulateTick();
         }
     }
 }

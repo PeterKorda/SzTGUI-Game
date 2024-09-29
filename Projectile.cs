@@ -11,16 +11,13 @@ namespace Game
     internal class Projectile : GameObject
     {
         protected bool isFriendly;
-        protected Player parent;
+        protected GameObject parent;
         public bool IsFriendly { get { return isFriendly; } }
         public GameObject Parent { get { return parent; } }
+        public int TimeToLive = 40;
         int alive = 0;
 
-        public Projectile()
-        {
-        }
-
-        public Projectile(Point position, Vector2 direction, float acceleration, float maxVelocity, float dragForce, Player parent) : base(position, acceleration, maxVelocity, dragForce)
+        public Projectile(Point position, Vector2 direction, float acceleration, float maxVelocity, float dragForce, GameObject parent) : base(position, acceleration, maxVelocity, dragForce)
         {
             this.parent = parent;
             velocity = Normalize(direction);
@@ -32,6 +29,9 @@ namespace Game
 
             position = new Point(position.X + velocity.X, position.Y + velocity.Y);
             alive++;
+            if (alive > TimeToLive) { isDead = true; }
+
+            base.SimulateTick();
         }
     }
 }

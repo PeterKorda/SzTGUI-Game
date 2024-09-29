@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using Label = System.Windows.Controls.Label;
 
 namespace Game
 {
@@ -16,6 +20,12 @@ namespace Game
         protected float acceleration;
         protected float maxVelocity;
         protected float dragForce;
+        protected GameManager gm;
+        protected bool isDead = false;
+        
+        public Double AimDirection;
+        public Label uiElement;
+
 
 
         public Point Position { get { return position; } }
@@ -23,8 +33,43 @@ namespace Game
         public float Acceleration { get { return acceleration; } }
         public float MaxVelocity { get { return maxVelocity; } }
         public float DragForce { get { return dragForce; } }
+        public bool IsDead { get { return isDead; } }
 
-        public abstract void SimulateTick();
+
+        protected GameObject()
+        {
+            velocity = new Vector2(0, 0);
+            position = new Point(0, 0);
+            acceleration = 0;
+            maxVelocity = 0;
+        }
+
+        protected GameObject(Point position, float acceleration, float maxVelocity)
+        {
+            this.position = position;
+            this.acceleration = acceleration;
+            this.maxVelocity = maxVelocity;
+        }
+
+        public virtual void SimulateTick() 
+        {
+
+            //if (position.X<0 || position.Y < 0 || position.X > gm.gameCanvas.ActualWidth || position.Y > gm.gameCanvas.ActualHeight)
+            //{
+            //    isDead = true;
+            //}
+
+            // Update UI
+            uiElement.LayoutTransform = new RotateTransform(AimDirection * 180 / Math.PI - 90);
+            Canvas.SetTop(uiElement, this.position.Y);
+            Canvas.SetLeft(uiElement, this.position.X);
+        }
+
+        public virtual void Dead()
+        {
+            gm.gameCanvas.Children.Remove(uiElement);
+            Debug.WriteLine("Dead: " + this.ToString());
+        }
 
         protected GameObject(Point position, float acceleration, float maxVelocity, float dragForce)
         {
@@ -35,19 +80,15 @@ namespace Game
             this.dragForce = dragForce;
         }
 
-        protected GameObject()
+        public void SetGameManager(GameManager gm)
         {
-            velocity = new Vector2(0,0);
-            position = new Point(0,0);
-            acceleration = 0;
-            maxVelocity = 0;
+            this.gm = gm;
         }
 
-        protected GameObject(Point position, float acceleration, float maxVelocity)
+        protected void genUi(char character)
         {
-            this.position = position;
-            this.acceleration = acceleration;
-            this.maxVelocity = maxVelocity;
+            uiElement = new Label() { Content = character };
+            gm.gameCanvas.Children.Add(uiElement);
         }
 
         public static Vector2 Normalize(Vector2 v)
