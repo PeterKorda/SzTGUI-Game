@@ -16,6 +16,7 @@ namespace Game
     {
 
         Window gameWindow;
+        Canvas gameCanvas;
 
         bool playerShoot;
         bool pause;
@@ -34,11 +35,13 @@ namespace Game
         public Player Player { get => player;}
         public bool Paused { get => paused; set => paused = value; }
 
-        public InputManager(Window gameWindow, Player player)
+        public InputManager(Window gameWindow,Canvas gameCanvas, Player player)
         {
             this.gameWindow = gameWindow;
             this.player = player;
+            this.gameCanvas = gameCanvas;
             paused = false;
+
         }
 
         public void GetInput()
@@ -49,9 +52,14 @@ namespace Game
             Point pointToScreen = gameWindow.PointToScreen(pointToWindow);
             Mouse.Capture(null);
             //Point player = LB_Player.PointToScreen(new Point(0, 0));
+            Point playerToScreen = gameCanvas.PointToScreen(new Point(0, 0));
+            playerToScreen.X += player.Position.X;
+            playerToScreen.Y += player.Position.Y;
+            Point playerToWindow = new Point(Canvas.GetLeft(player.uiElement), Canvas.GetTop(player.uiElement));
 
-            playerHeading = Math.Atan2((player.Position.Y - pointToScreen.Y), (player.Position.X - pointToScreen.X));
+            playerHeading = Math.Atan2((playerToScreen.Y - pointToScreen.Y), (playerToScreen.X - pointToScreen.X));
             //heading = heading * 180 / Math.PI - 90;
+            Debug.WriteLine("player: " + playerToScreen + "\tui: " + player.uiElement.PointToScreen(new Point(0, 0)) + "\tm: " + pointToScreen);
 
 
 

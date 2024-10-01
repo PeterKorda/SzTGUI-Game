@@ -61,8 +61,11 @@ namespace Game
 
             // Update UI
             uiElement.LayoutTransform = new RotateTransform(AimDirection * 180 / Math.PI - 90);
-            Canvas.SetTop(uiElement, this.position.Y);
-            Canvas.SetLeft(uiElement, this.position.X);
+            Canvas.SetTop(uiElement, this.position.Y - uiElement.ActualHeight / 2);
+            Canvas.SetLeft(uiElement, this.position.X - uiElement.ActualWidth / 2);
+
+
+            //Debug.WriteLine("H: " + uiElement + "\taH: " + uiElement.ActualHeight);
         }
 
         public virtual void Dead()
@@ -87,7 +90,7 @@ namespace Game
 
         protected void genUi(char character)
         {
-            uiElement = new Label() { Content = character };
+            uiElement = new Label() { Content = character, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             gm.gameCanvas.Children.Add(uiElement);
         }
 
