@@ -26,6 +26,8 @@ namespace Game
         double playerHeading;  // in rad
         bool paused;
 
+        public bool spawnEnemy = false;
+
         public Window GameWindow { get => gameWindow;}
         public bool PlayerShoot { get => playerShoot;}
         public bool Pause { get => pause;}
@@ -88,6 +90,14 @@ namespace Game
             if ((Keyboard.GetKeyStates(Key.Space) & KeyStates.Down) == 0)
             {
                 playerShoot = false;
+            }
+            if ((Keyboard.GetKeyStates(Key.LeftAlt) & KeyStates.Down) > 0)
+            {
+                spawnEnemy = true;
+            }
+            if ((Keyboard.GetKeyStates(Key.LeftAlt) & KeyStates.Down) == 0)
+            {
+                spawnEnemy = false;
             }
 
 

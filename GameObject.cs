@@ -22,6 +22,7 @@ namespace Game
         protected float dragForce;
         protected GameManager gm;
         protected bool isDead = false;
+        protected double uiOffsetAngle;
         
         public Double AimDirection;
         public Label uiElement;
@@ -60,7 +61,7 @@ namespace Game
             //}
 
             // Update UI
-            uiElement.LayoutTransform = new RotateTransform(AimDirection * 180 / Math.PI - 90);
+            uiElement.LayoutTransform = new RotateTransform(AimDirection * 180 / Math.PI + uiOffsetAngle);
             Canvas.SetTop(uiElement, this.position.Y - uiElement.ActualHeight / 2);
             Canvas.SetLeft(uiElement, this.position.X - uiElement.ActualWidth / 2);
 
@@ -88,8 +89,9 @@ namespace Game
             this.gm = gm;
         }
 
-        protected void genUi(char character)
+        public void genUi(char character, double uiOffsetAngle)
         {
+            this.uiOffsetAngle = uiOffsetAngle;
             uiElement = new Label() { Content = character, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             gm.gameCanvas.Children.Add(uiElement);
         }

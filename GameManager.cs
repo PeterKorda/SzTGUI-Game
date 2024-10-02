@@ -10,7 +10,7 @@ namespace Game
 {
     internal class GameManager
     {
-        Player player;
+        public Player player;
         public List<Enemy> enemies;
         public List<Projectile> projectiles;
         List<Enemy> deadEnemies;
@@ -95,6 +95,14 @@ namespace Game
                 }
                 deadEnemies.Clear();
                 deadProjectiles.Clear();
+
+                if (inputManager.spawnEnemy)
+                {
+                    Enemy e = new Enemy(new Point(700,200),.8f,3f,.25f);
+                    e.SetGameManager(this);
+                    e.genUi('4',90);
+                    enemies.Add(e);
+                }
             }
         }
     }

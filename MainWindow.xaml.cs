@@ -31,11 +31,12 @@ namespace Game
 
             Debug.WriteLine(this.ActualHeight);
             player = new Player(new Point(400, 400), 1f, 5f, .25f);
-            player.uiElement = new System.Windows.Controls.Label() { Content = 'A' };
-            Main_Canvas.Children.Add(player.uiElement);
+            //player.uiElement = new System.Windows.Controls.Label() { Content = 'A' };
+            //Main_Canvas.Children.Add(player.uiElement);
             inputManager = new InputManager(this, Main_Canvas, player);
             GM = new GameManager(player, inputManager, Main_Canvas, this);
             player.SetGameManager(GM);
+            player.genUi('A',-90);
             GM.StartGame();
         }
 

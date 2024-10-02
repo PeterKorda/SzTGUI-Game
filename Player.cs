@@ -24,9 +24,8 @@ namespace Game
         public override void SimulateTick()
         {
             // Acceleration
-            Vector2 nextVelocity = velocity;
             MoveDirection = Normalize(MoveDirection);   // Normalize the MoveDirection vector so the move speed will be consistent.
-            nextVelocity = velocity + MoveDirection * acceleration;
+            Vector2 nextVelocity = velocity + MoveDirection * acceleration;
             velocity = ClampVelocity(nextVelocity, maxVelocity);
 
             //Debug.WriteLine("MV: " + MoveDirection);
