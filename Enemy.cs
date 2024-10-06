@@ -58,5 +58,23 @@ namespace Game
             }
             else { lifeTime = 0; }
         }
+
+        public override void CheckCollisions()
+        {
+            List<Enemy> enemies = gm.enemies;
+            List<Projectile> projectiles = gm.projectiles;
+            foreach (Projectile p in projectiles)
+            {
+                if (!p.IsDead && p.IsFriendly)
+                {
+                    if (GetDistance(this, p) <= p.CollisionSize + this.collisionSize)
+                    {
+                        this.Dead();
+                        p.Dead();
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

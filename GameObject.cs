@@ -23,7 +23,9 @@ namespace Game
         protected GameManager gm;
         protected bool isDead = false;
         protected double uiOffsetAngle;
-        
+
+        protected float collisionSize = 8f;
+
         public Double AimDirection;
         public Label uiElement;
 
@@ -35,6 +37,7 @@ namespace Game
         public float MaxVelocity { get { return maxVelocity; } }
         public float DragForce { get { return dragForce; } }
         public bool IsDead { get { return isDead; } }
+        public float CollisionSize { get { return collisionSize; } }
 
 
         protected GameObject()
@@ -52,7 +55,7 @@ namespace Game
             this.maxVelocity = maxVelocity;
         }
 
-        public virtual void SimulateTick() 
+        public virtual void SimulateTick()
         {
 
             //if (position.X<0 || position.Y < 0 || position.X > gm.gameCanvas.ActualWidth || position.Y > gm.gameCanvas.ActualHeight)
@@ -73,6 +76,7 @@ namespace Game
         {
             gm.gameCanvas.Children.Remove(uiElement);
             Debug.WriteLine("Dead: " + this.ToString());
+            isDead = true;
         }
 
         protected GameObject(Point position, float acceleration, float maxVelocity, float dragForce)
@@ -82,6 +86,17 @@ namespace Game
             this.maxVelocity = maxVelocity;
             velocity = new Vector2(0, 0);
             this.dragForce = dragForce;
+        }
+
+        public abstract void CheckCollisions();
+
+        public static float GetDistance(GameObject a, GameObject b)
+        {
+            Vector2 v = new Vector2();
+            v.X = (float)(a.position.X - b.position.X);
+            v.Y = (float)(a.position.Y - b.position.Y);
+
+            return v.Length();
         }
 
         public void SetGameManager(GameManager gm)

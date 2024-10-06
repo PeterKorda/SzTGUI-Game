@@ -17,10 +17,12 @@ namespace Game
         public int TimeToLive = 100;
         int alive = 0;
 
-        public Projectile(Point position, Vector2 direction, float acceleration, float maxVelocity, float dragForce, GameObject parent) : base(position, acceleration, maxVelocity, dragForce)
+        public Projectile(bool isFriendly, Point position, Vector2 direction, float acceleration, float maxVelocity, float dragForce, GameObject parent) : base(position, acceleration, maxVelocity, dragForce)
         {
+            this.isFriendly = isFriendly;
             this.parent = parent;
             velocity = Normalize(direction);
+            collisionSize = 2f;
         }
 
         public override void SimulateTick()
@@ -29,9 +31,27 @@ namespace Game
 
             position = new Point(position.X + velocity.X, position.Y + velocity.Y);
             alive++;
-            if (alive > TimeToLive) { isDead = true; }
+            if (alive > TimeToLive) { this.Dead(); }
 
             base.SimulateTick();
+        }
+
+        public override void CheckCollisions()
+        {
+            List<Enemy> enemies = gm.enemies;
+            List<Projectile> projectiles = gm.projectiles;
+            foreach (Projectile p in projectiles)
+            {
+                if (!p.isDead && p.isFriendly != this.isFriendly)
+                {
+                    if (GetDistance(this, p) <= p.collisionSize + this.collisionSize)
+                    {
+                        this.Dead();
+                        p.Dead();
+                        break;
+                    }
+                }
+            }
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Game
         public void Shoot()
         {
             Vector2 direction = new Vector2((float)Math.Cos(AimDirection), (float)Math.Sin(AimDirection));
-            Projectile p = new Projectile(this.position, -direction, 4f, 8f, 1f, this);
+            Projectile p = new Projectile(true, this.position, -direction, 4f, 8f, 1f, this);
             p.SetGameManager(gm);
             p.uiElement = new System.Windows.Controls.Label() { Content = '*' };
             gm.gameCanvas.Children.Add(p.uiElement);
@@ -61,6 +61,24 @@ namespace Game
         public void SetAimDirection(double angle)
         {
             AimDirection = angle;
+        }
+
+        public override void CheckCollisions()
+        {
+            List<Enemy> enemies = gm.enemies;
+            List<Projectile> projectiles = gm.projectiles;
+            foreach (Projectile p in projectiles)
+            {
+                if (!p.IsDead && !p.IsFriendly)
+                {
+                    if (GetDistance(this, p) <= p.CollisionSize + this.collisionSize)
+                    {
+                        this.Dead();
+                        p.Dead();
+                        break;
+                    }
+                }
+            }
         }
     }
 }

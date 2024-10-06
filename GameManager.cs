@@ -64,6 +64,7 @@ namespace Game
                 player.MoveDirection = inputManager.PlayerMove;
                 if (inputManager.PlayerShoot) { player.Shoot(); }
 
+                //Movement phase
                 player.SimulateTick();
                 foreach (Projectile p in projectiles)
                 {
@@ -82,16 +83,34 @@ namespace Game
                     }
                 }
 
+                //Collision phase
+                foreach (Projectile p in projectiles)
+                {
+                    p.CheckCollisions();
+                    if (p.IsDead)
+                    {
+                        deadProjectiles.Add(p);
+                    }
+                }
+                foreach (Enemy e in enemies)
+                {
+                    e.CheckCollisions();
+                    if (e.IsDead)
+                    {
+                        deadEnemies.Add(e);
+                    }
+                }
+                player.CheckCollisions();
+
+
                 // Dead objects
                 foreach (Enemy e in deadEnemies)
                 {
                     enemies.Remove(e);
-                    e.Dead();
                 }
                 foreach (Projectile p in deadProjectiles)
                 {
                     projectiles.Remove(p);
-                    p.Dead();
                 }
                 deadEnemies.Clear();
                 deadProjectiles.Clear();

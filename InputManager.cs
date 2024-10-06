@@ -61,7 +61,7 @@ namespace Game
 
             playerHeading = Math.Atan2((playerToScreen.Y - pointToScreen.Y), (playerToScreen.X - pointToScreen.X));
             //heading = heading * 180 / Math.PI - 90;
-            Debug.WriteLine("player: " + playerToScreen + "\tui: " + player.uiElement.PointToScreen(new Point(0, 0)) + "\tm: " + pointToScreen);
+            //Debug.WriteLine("player: " + playerToScreen + "\tui: " + player.uiElement.PointToScreen(new Point(0, 0)) + "\tm: " + pointToScreen);
 
 
 
