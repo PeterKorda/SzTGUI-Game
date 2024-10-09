@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Reflection.Emit;
 using System.Numerics;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace Game
 {
@@ -30,7 +31,7 @@ namespace Game
             //Thread.Sleep(2000);
 
             Debug.WriteLine(this.ActualHeight);
-            player = new Player(new Point(400, 400), 1f, 5f, .25f);
+            player = new Player(new Point(400, 400), 1f, 5f, .05f);
             //player.uiElement = new System.Windows.Controls.Label() { Content = 'A' };
             //Main_Canvas.Children.Add(player.uiElement);
             inputManager = new InputManager(this, Main_Canvas, player);

@@ -19,6 +19,9 @@ namespace Game
         public Canvas gameCanvas;
         public Window gameWindow;
         int targetFrameRate = 40;
+        int tick = 0;
+
+        public int Tick { get { return tick; } }
 
         public GameManager(Player player, InputManager inputManager, Canvas gameCanvas, Window gameWindow)
         {
@@ -59,6 +62,8 @@ namespace Game
             inputManager.GetInput();
             if (!inputManager.Paused)
             {
+                // Start of game tick
+            #region GameTick
                 // Input
                 player.AimDirection = inputManager.PlayerHeading;
                 player.MoveDirection = inputManager.PlayerMove;
@@ -111,6 +116,7 @@ namespace Game
                 foreach (Projectile p in deadProjectiles)
                 {
                     projectiles.Remove(p);
+                    // -score for missed projectiles
                 }
                 deadEnemies.Clear();
                 deadProjectiles.Clear();
@@ -122,6 +128,11 @@ namespace Game
                     e.genUi('4',90);
                     enemies.Add(e);
                 }
+
+                tick++;
+            #endregion 
+                // End of game tick
+
             }
         }
     }

@@ -53,8 +53,7 @@ namespace Game
             Vector2 direction = new Vector2((float)Math.Cos(AimDirection), (float)Math.Sin(AimDirection));
             Projectile p = new Projectile(true, this.position, -direction, 4f, 8f, 1f, this);
             p.SetGameManager(gm);
-            p.uiElement = new System.Windows.Controls.Label() { Content = '*' };
-            gm.gameCanvas.Children.Add(p.uiElement);
+            p.genUi('*', 0);
             gm.projectiles.Add(p);
         }
 

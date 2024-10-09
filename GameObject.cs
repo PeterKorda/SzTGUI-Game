@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Color = System.Drawing.Color;
 using Label = System.Windows.Controls.Label;
 
 namespace Game
@@ -28,6 +29,8 @@ namespace Game
 
         public Double AimDirection;
         public Label uiElement;
+        public string GameTime;
+        public string GameScore;
 
 
 
@@ -107,7 +110,7 @@ namespace Game
         public void genUi(char character, double uiOffsetAngle)
         {
             this.uiOffsetAngle = uiOffsetAngle;
-            uiElement = new Label() { Content = character, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            uiElement = new Label() { Content = character, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0,255,0))};
             gm.gameCanvas.Children.Add(uiElement);
         }
 

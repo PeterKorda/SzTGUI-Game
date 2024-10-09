@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game"
         mc:Ignorable="d"
-        Title="PainWindow" Height="720" Width="1280" LostFocus="Window_Pause" LostKeyboardFocus="Window_Pause" GotFocus="Window_Resume" KeyDown="Window_KeyDown" MouseDown="Window_Pause" KeyUp="Window_KeyUp">
+        Title="PainWindow" Height="720" Width="1280" LostFocus="Window_Pause" LostKeyboardFocus="Window_Pause" GotFocus="Window_Resume" KeyDown="Window_KeyDown" MouseDown="Window_Pause" KeyUp="Window_KeyUp" Background="Black" Foreground="Lime" Cursor="Cross">
 	<Canvas x:Name="Main_Canvas">
+		<Label x:Name="LB_Timer" Content="00:00" Canvas.Left="0" Canvas.Top="0" Background="#00000000" Foreground="#FF00FA00" FontSize="36" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,20,30,18" FontFamily="Bahnschrift"/>
 	</Canvas>
 </Window>
