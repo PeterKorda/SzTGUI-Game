@@ -26,11 +26,6 @@ namespace Game
         public Vector2 MoveDirection;
         public List<Projectile> projectiles;
 
-        public override void Dead()
-        {
-            ;
-        }
-
         public override void SimulateTick()
         {
             // Acceleration
