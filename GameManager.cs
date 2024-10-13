@@ -181,7 +181,7 @@ namespace Game
                     s = (int) (s % 60);
                     string mm = (m > 9) ? m + "" : "0" + m;
                     string ss = (s > 9) ? s+"" : "0"+s;
-                    (gameWindow as MainWindow).Time = $"{mm}:{ss}";
+                    (gameWindow as MainWindow).Time = $"{mm}:{ss}" + "\nx" + Math.Round(difficulty, 2);
                 }
 
                 // Difficulty multiplyer
@@ -194,7 +194,7 @@ namespace Game
 
                 #endregion
                 // End of game tick
-                (gameWindow as MainWindow).Score = Score+"\nx"+ Math.Round(difficulty,2);
+                (gameWindow as MainWindow).Score = Score+"";
             }
         }
 

@@ -66,11 +66,7 @@ namespace Game
             DataContext = this;
             InitializeComponent();
 
-            //Thread.Sleep(2000);
-
             player = new Player(new Point(this.Width/2, this.Height/2), .2f, 4f, .05f);
-            //player.uiElement = new System.Windows.Controls.Label() { Content = 'A' };
-            //Main_Canvas.Children.Add(player.uiElement);
             inputManager = new InputManager(this, Main_Canvas, player);
             GM = new GameManager(player, inputManager, Main_Canvas, this);
             player.SetGameManager(GM);
