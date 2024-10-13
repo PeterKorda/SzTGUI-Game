@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Game
 {
@@ -20,6 +22,9 @@ namespace Game
         public Window gameWindow;
         int targetFrameRate = 40;
         int tick = 0;
+        Random rnd;
+
+        System.Timers.Timer main_timer;
 
         public int Tick { get { return tick; } }
 
@@ -35,6 +40,8 @@ namespace Game
 
             deadEnemies = new List<Enemy>();
             deadProjectiles = new List<Projectile>();
+
+            rnd = new Random();
         }
 
         public void StartGame()
@@ -42,7 +49,7 @@ namespace Game
             //player = new Player(new Point(gameCanvas.ActualHeight / 2, gameCanvas.ActualWidth / 2), 1f, 5f, .25f);
             //player.uiElement = new Label() { Content = 'A' };
 
-            System.Timers.Timer main_timer = new System.Timers.Timer();
+            main_timer = new System.Timers.Timer();
             main_timer.Elapsed += delegate
             {
                 {
@@ -56,6 +63,24 @@ namespace Game
             main_timer.Interval = 1000 / targetFrameRate;
             main_timer.Start();
 
+        }
+
+        public void EndGame()
+        {
+            main_timer.Close();
+            Label L = new Label()
+            {
+                Content = "Game Over!",
+                Height = gameWindow.Height,
+                Width = gameWindow.Width,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                FontSize = 40,
+                Foreground = Brushes.Lime,
+            };
+            gameCanvas.Children.Add(L);
         }
         public void Update()
         {
@@ -123,17 +148,46 @@ namespace Game
 
                 if (inputManager.spawnEnemy)
                 {
-                    Enemy e = new Enemy(new Point(700,200),.8f,3f,.25f);
-                    e.SetGameManager(this);
-                    e.genUi('4',90);
-                    enemies.Add(e);
+                    SpawnEnemy();
                 }
+                if (tick%120<1 && tick > 180)
+                {
+                    SpawnEnemy();
+                }
+
+                if (player.IsDead) { EndGame(); }
 
                 tick++;
             #endregion 
                 // End of game tick
 
             }
+        }
+
+        void SpawnEnemy()
+        {
+            Point spawn;
+            int spawnQuad = rnd.Next(4);
+            if (spawnQuad == 1)
+            {
+                spawn = new Point(rnd.Next(50),rnd.Next((int)gameWindow.Width));
+            }
+            else if (spawnQuad == 2)
+            {
+                spawn = new Point(rnd.Next((int)gameWindow.Height), (int)gameWindow.Width-rnd.Next(50));
+            }
+            else if (spawnQuad == 3)
+            {
+                spawn = new Point((int)gameWindow.Height-rnd.Next(50), rnd.Next((int)gameWindow.Width));
+            }
+            else
+            {
+                spawn = new Point(rnd.Next((int)gameWindow.Height), rnd.Next(50));
+            }
+            Enemy e = new Enemy(spawn, .1f, 4f, .05f);
+            e.SetGameManager(this);
+            e.genUi(90);
+            enemies.Add(e);
         }
     }
 }

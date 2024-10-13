@@ -31,18 +31,21 @@ namespace Game
             //Thread.Sleep(2000);
 
             Debug.WriteLine(this.ActualHeight);
-            player = new Player(new Point(400, 400), 1f, 5f, .05f);
+            player = new Player(new Point(this.Width/2, this.Height/2), .1f, 4f, .05f);
             //player.uiElement = new System.Windows.Controls.Label() { Content = 'A' };
             //Main_Canvas.Children.Add(player.uiElement);
             inputManager = new InputManager(this, Main_Canvas, player);
             GM = new GameManager(player, inputManager, Main_Canvas, this);
             player.SetGameManager(GM);
-            player.genUi('A',-90);
+            player.genUi(-90);
+
             GM.StartGame();
         }
 
         public void Window_Pause(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine(this.ActualHeight);
+            Debug.WriteLine(this.ActualWidth);
             inputManager.Paused = true;
         }
 

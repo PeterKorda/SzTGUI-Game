@@ -7,15 +7,20 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Game
 {
     internal class Player : GameObject
     {
-        public Player() { AimDirection = 0; projectiles = new List<Projectile>(); }
+        Random rnd;
+
+        public Player() { AimDirection = 0; projectiles = new List<Projectile>(); rnd = new Random(); }
         public Player(Point position, float acceleration, float maxVelocity, float dragForce) : base(position, acceleration, maxVelocity, dragForce)
         {
             AimDirection = 0; projectiles = new List<Projectile>();
+            rnd = new Random();
         }
 
         public Vector2 MoveDirection;
@@ -50,10 +55,12 @@ namespace Game
 
         public void Shoot()
         {
-            Vector2 direction = new Vector2((float)Math.Cos(AimDirection), (float)Math.Sin(AimDirection));
+            double rndDirection = AimDirection + (rnd.NextDouble() / 10 - .1);
+            Vector2 direction = new Vector2((float)Math.Cos(rndDirection), (float)Math.Sin(rndDirection));
             Projectile p = new Projectile(true, this.position, -direction, 4f, 8f, 1f, this);
+            p.AimDirection = rndDirection;
             p.SetGameManager(gm);
-            p.genUi('*', 0);
+            p.genUi(0);
             gm.projectiles.Add(p);
         }
 
@@ -78,6 +85,27 @@ namespace Game
                     }
                 }
             }
+        }
+
+        public override void genUi(double uiOffsetAngle)
+        {
+            this.uiOffsetAngle = uiOffsetAngle;
+
+            Polyline p = new Polyline();
+            p.Points = new PointCollection(new Point[]{
+                new Point(5, 5),
+                new Point(0, 10),
+                new Point(5, 15),
+                new Point(10, 10),
+                new Point(5,5),
+                new Point(5, 0),
+            });
+            p.Stroke = Brushes.Turquoise;
+            p.StrokeThickness = 1.5;
+            p.RenderTransformOrigin = new Point(.5,.6);
+
+            this.uiElement = p;
+            gm.gameCanvas.Children.Add(this.uiElement);
         }
     }
 }

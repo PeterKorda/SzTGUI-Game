@@ -28,7 +28,7 @@ namespace Game
         protected float collisionSize = 8f;
 
         public Double AimDirection;
-        public Label uiElement;
+        public FrameworkElement uiElement;
         public string GameTime;
         public string GameScore;
 
@@ -67,12 +67,13 @@ namespace Game
             //}
 
             // Update UI
-            uiElement.LayoutTransform = new RotateTransform(AimDirection * 180 / Math.PI + uiOffsetAngle);
-            Canvas.SetTop(uiElement, this.position.Y - uiElement.ActualHeight / 2);
-            Canvas.SetLeft(uiElement, this.position.X - uiElement.ActualWidth / 2);
+            TransformGroup tf = new TransformGroup();
+            tf.Children.Add(new RotateTransform(AimDirection * 180 / Math.PI + uiOffsetAngle));
+            tf.Children.Add(new TranslateTransform(this.position.X-uiElement.ActualWidth/2,this.position.Y-uiElement.ActualHeight/2));
+            uiElement.RenderTransform = tf;
+            //Canvas.SetTop(uiElement, this.position.Y);
+            //Canvas.SetLeft(uiElement, this.position.X);
 
-
-            //Debug.WriteLine("H: " + uiElement + "\taH: " + uiElement.ActualHeight);
         }
 
         public virtual void Dead()
@@ -107,10 +108,9 @@ namespace Game
             this.gm = gm;
         }
 
-        public void genUi(char character, double uiOffsetAngle)
+        public virtual void genUi(double uiOffsetAngle)
         {
             this.uiOffsetAngle = uiOffsetAngle;
-            uiElement = new Label() { Content = character, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0,255,0))};
             gm.gameCanvas.Children.Add(uiElement);
         }
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Game
 {
@@ -16,7 +17,7 @@ namespace Game
         protected GameObject parent;
         public bool IsFriendly { get { return isFriendly; } }
         public GameObject Parent { get { return parent; } }
-        public int TimeToLive = 100;
+        public int TimeToLive = 175;
         int alive = 0;
 
         public Projectile(bool isFriendly, Point position, Vector2 direction, float acceleration, float maxVelocity, float dragForce, GameObject parent) : base(position, acceleration, maxVelocity, dragForce)
@@ -54,6 +55,20 @@ namespace Game
                     }
                 }
             }
+        }
+
+        public override void genUi(double uiOffsetAngle)
+        {
+            this.uiOffsetAngle = uiOffsetAngle;
+
+           Rectangle p = new Rectangle();
+            p.Height = 3;
+            p.Width = 10;
+            p.Fill = (isFriendly)?Brushes.Turquoise:Brushes.Red;
+            p.RenderTransformOrigin = new Point(.5, .6);
+
+            this.uiElement = p;
+            gm.gameCanvas.Children.Add(this.uiElement);
         }
     }
 }
