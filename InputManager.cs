@@ -84,7 +84,6 @@ namespace Game
             }
             if ((Keyboard.GetKeyStates(Key.Space) & KeyStates.Down) > 0)
             {
-                Debug.WriteLine("Shoot------------");
                 playerShoot = true;
             }
             if ((Keyboard.GetKeyStates(Key.Space) & KeyStates.Down) == 0)

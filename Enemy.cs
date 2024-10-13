@@ -32,7 +32,7 @@ namespace Game
             rnd = new Random();
 
             fireRate = rnd.Next(40,120);
-            burst = rnd.Next(1,10);
+            burst = rnd.Next(1,7);
             inburst = burst;
         }
 
@@ -117,7 +117,7 @@ namespace Game
                 new Point(5,5),
                 new Point(5, 0),
             });
-            p.Stroke = Brushes.Lime;
+            p.Stroke = Brushes.Orange;
             p.StrokeThickness = 1.5;
             p.RenderTransformOrigin = new Point(.5, .6);
 

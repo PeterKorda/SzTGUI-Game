@@ -7,21 +7,29 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Game
 {
     internal class GameManager
     {
         public Player player;
+
         public List<Enemy> enemies;
         public List<Projectile> projectiles;
         List<Enemy> deadEnemies;
         List<Projectile> deadProjectiles;
+
         InputManager inputManager;
         public Canvas gameCanvas;
         public Window gameWindow;
+        public Grid uiGrid;
+
         int targetFrameRate = 40;
         int tick = 0;
+        public int Score;
+        public float difficulty = 1f; 
+
         Random rnd;
 
         System.Timers.Timer main_timer;
@@ -34,6 +42,7 @@ namespace Game
             this.inputManager = inputManager;
             this.gameCanvas = gameCanvas;
             this.gameWindow = gameWindow;
+            this.uiGrid = (gameCanvas.Children[0] as Grid);
 
             enemies = new List<Enemy>();
             projectiles = new List<Projectile>();
@@ -48,7 +57,8 @@ namespace Game
         {
             //player = new Player(new Point(gameCanvas.ActualHeight / 2, gameCanvas.ActualWidth / 2), 1f, 5f, .25f);
             //player.uiElement = new Label() { Content = 'A' };
-
+            (gameWindow as MainWindow).Time = "00:00";
+            Score = 100;
             main_timer = new System.Timers.Timer();
             main_timer.Elapsed += delegate
             {
@@ -80,7 +90,7 @@ namespace Game
                 FontSize = 40,
                 Foreground = Brushes.Lime,
             };
-            gameCanvas.Children.Add(L);
+            uiGrid.Children.Add(L);
         }
         public void Update()
         {
@@ -96,6 +106,7 @@ namespace Game
 
                 //Movement phase
                 player.SimulateTick();
+                BorderCollision(player);
                 foreach (Projectile p in projectiles)
                 {
                     p.SimulateTick();
@@ -136,6 +147,7 @@ namespace Game
                 // Dead objects
                 foreach (Enemy e in deadEnemies)
                 {
+                    Score += (int)(20*difficulty);
                     enemies.Remove(e);
                 }
                 foreach (Projectile p in deadProjectiles)
@@ -150,18 +162,66 @@ namespace Game
                 {
                     SpawnEnemy();
                 }
-                if (tick%120<1 && tick > 180)
+                if (tick%((targetFrameRate*3)/difficulty)<1 && tick > 180)
                 {
                     SpawnEnemy();
                 }
 
                 if (player.IsDead) { EndGame(); }
 
-                tick++;
-            #endregion 
-                // End of game tick
 
+
+                tick++;
+                if (tick % targetFrameRate == 0)
+                {
+                    Score++;
+
+                    int s = tick / targetFrameRate;
+                    int m = s / 60;
+                    s = (int) (s % 60);
+                    string mm = (m > 9) ? m + "" : "0" + m;
+                    string ss = (s > 9) ? s+"" : "0"+s;
+                    (gameWindow as MainWindow).Time = $"{mm}:{ss}";
+                }
+
+                // Difficulty multiplyer
+                if (tick%(targetFrameRate*5)<1)
+                {
+                    difficulty += .01f;
+                    difficulty *= 1.02f;
+                    Debug.WriteLine(difficulty);
+                }
+
+                #endregion
+                // End of game tick
+                (gameWindow as MainWindow).Score = Score+"\nx"+ Math.Round(difficulty,2);
             }
+        }
+
+        void BorderCollision(GameObject g)
+        {
+            if (g.Position.X-g.CollisionSize <= 0)
+            {
+                g.velocity.X = -g.velocity.X;
+                g.position.X = 1+g.CollisionSize;
+            }
+            if (g.Position.Y-g.CollisionSize <= 0)
+            {
+                g.velocity.Y = -g.Velocity.Y;
+                g.position.Y = 1+g.CollisionSize;
+            }
+            if (g.Position.X+g.CollisionSize >= gameCanvas.ActualWidth)
+            {
+                g.velocity.X = -g.velocity.X;
+                g.position.X = gameCanvas.ActualWidth-1-g.CollisionSize;
+            }
+            if (g.Position.Y + g.CollisionSize >= gameCanvas.ActualHeight)
+            {
+                g.velocity.Y = -g.velocity.Y;
+                g.position.Y = gameCanvas.ActualHeight-1-g.CollisionSize;
+            }
+
+
         }
 
         void SpawnEnemy()
@@ -170,24 +230,26 @@ namespace Game
             int spawnQuad = rnd.Next(4);
             if (spawnQuad == 1)
             {
-                spawn = new Point(rnd.Next(50),rnd.Next((int)gameWindow.Width));
+                spawn = new Point(30,rnd.Next((int)gameWindow.ActualHeight));
             }
             else if (spawnQuad == 2)
             {
-                spawn = new Point(rnd.Next((int)gameWindow.Height), (int)gameWindow.Width-rnd.Next(50));
+                spawn = new Point(rnd.Next((int)gameWindow.ActualWidth), (int)gameWindow.ActualHeight-30);
             }
             else if (spawnQuad == 3)
             {
-                spawn = new Point((int)gameWindow.Height-rnd.Next(50), rnd.Next((int)gameWindow.Width));
+                spawn = new Point((int)gameWindow.ActualWidth-30, rnd.Next((int)gameWindow.ActualHeight));
             }
             else
             {
-                spawn = new Point(rnd.Next((int)gameWindow.Height), rnd.Next(50));
+                spawn = new Point(rnd.Next((int)gameWindow.ActualWidth), 30);
             }
             Enemy e = new Enemy(spawn, .1f, 4f, .05f);
             e.SetGameManager(this);
             e.genUi(90);
             enemies.Add(e);
         }
+
+
     }
 }

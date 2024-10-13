@@ -26,6 +26,11 @@ namespace Game
         public Vector2 MoveDirection;
         public List<Projectile> projectiles;
 
+        public override void Dead()
+        {
+            ;
+        }
+
         public override void SimulateTick()
         {
             // Acceleration
@@ -55,13 +60,17 @@ namespace Game
 
         public void Shoot()
         {
-            double rndDirection = AimDirection + (rnd.NextDouble() / 10 - .1);
-            Vector2 direction = new Vector2((float)Math.Cos(rndDirection), (float)Math.Sin(rndDirection));
-            Projectile p = new Projectile(true, this.position, -direction, 4f, 8f, 1f, this);
-            p.AimDirection = rndDirection;
-            p.SetGameManager(gm);
-            p.genUi(0);
-            gm.projectiles.Add(p);
+            if (gm.Score>0)
+            {
+                double rndDirection = AimDirection + (rnd.NextDouble() / 10 - .1);
+                Vector2 direction = new Vector2((float)Math.Cos(rndDirection), (float)Math.Sin(rndDirection));
+                Projectile p = new Projectile(true, this.position, -direction, 4f, 8f, 1f, this);
+                p.AimDirection = rndDirection;
+                p.SetGameManager(gm);
+                p.genUi(0);
+                gm.projectiles.Add(p);
+                gm.Score--;
+            }
         }
 
         public void SetAimDirection(double angle)

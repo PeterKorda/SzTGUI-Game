@@ -13,25 +13,62 @@ using System.Reflection.Emit;
 using System.Numerics;
 using System.Diagnostics;
 using System.Xml.Linq;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Game
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         InputManager inputManager;
         GameManager GM;
         Player player;
+        string score;
+        string time;
+
+        public string Score {
+            get { return score; }
+            set
+            {
+                if (score != value)
+                {
+                    score = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string Time
+        {
+            get { return time; }
+            set
+            {
+                if (time != value)
+                {
+                    time = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public MainWindow()
         {
+            DataContext = this;
             InitializeComponent();
 
             //Thread.Sleep(2000);
 
-            Debug.WriteLine(this.ActualHeight);
-            player = new Player(new Point(this.Width/2, this.Height/2), .1f, 4f, .05f);
+            player = new Player(new Point(this.Width/2, this.Height/2), .2f, 4f, .05f);
             //player.uiElement = new System.Windows.Controls.Label() { Content = 'A' };
             //Main_Canvas.Children.Add(player.uiElement);
             inputManager = new InputManager(this, Main_Canvas, player);
@@ -42,10 +79,10 @@ namespace Game
             GM.StartGame();
         }
 
+
+
         public void Window_Pause(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine(this.ActualHeight);
-            Debug.WriteLine(this.ActualWidth);
             inputManager.Paused = true;
         }
 

@@ -16,8 +16,8 @@ namespace Game
 {
     internal abstract class GameObject
     {
-        protected Point position;
-        protected Vector2 velocity;
+        public Point position;
+        public Vector2 velocity;
         protected float acceleration;
         protected float maxVelocity;
         protected float dragForce;
@@ -35,7 +35,7 @@ namespace Game
 
 
         public Point Position { get { return position; } }
-        public Vector2 Velocity { get { return velocity; } }
+        public Vector2 Velocity { get { return velocity; } set { velocity = value; } }
         public float Acceleration { get { return acceleration; } }
         public float MaxVelocity { get { return maxVelocity; } }
         public float DragForce { get { return dragForce; } }
