@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Numerics;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
-using Color = System.Drawing.Color;
-using Label = System.Windows.Controls.Label;
 
 namespace Game
 {
@@ -23,14 +14,12 @@ namespace Game
         protected float dragForce;
         protected GameManager gm;
         protected bool isDead = false;
-        protected double uiOffsetAngle;
+        protected double uiOffsetAngle; 
 
         protected float collisionSize = 8f;
 
         public Double AimDirection;
         public FrameworkElement uiElement;
-        public string GameTime;
-        public string GameScore;
 
 
 

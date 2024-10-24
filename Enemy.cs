@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -50,8 +44,6 @@ namespace Game
 
             if (MoveDirection.Length() == 0)    // Min velocity to move without input
             {
-                //velocity.X = (Math.Abs(velocity.X) > .01f) ? velocity.X : 0;
-                //velocity.Y = (Math.Abs(velocity.Y) > .01f) ? velocity.Y : 0;
                 Vector2 drag = Normalize(velocity) * dragForce;
                 //Debug.WriteLine("PD V: " + velocity);
                 //Debug.WriteLine("N V: " + Normalize(velocity));
@@ -79,6 +71,8 @@ namespace Game
             }
 
             base.SimulateTick();
+
+            // If an enemy lives for more than 13 hours 😉
             if (lifeTime < int.MaxValue)
             {
                 lifeTime++;
